@@ -52,22 +52,30 @@ app.post("/api/products", async (req, res) => {
   try {
     const { brand, category, price, playerType, material, level } = req.body;
 
+    console.log("📦 Incoming Data:", req.body); // Debug log
+
     // Basic validation
-    if (!brand || !category || price == null)
-      return res.status(400).json({ message: "Brand, category, and price are required" });
+    if (!brand || !category || price === undefined || price === null) {
+      return res
+        .status(400)
+        .json({ message: "Brand, category, and price are required" });
+    }
 
     const newProduct = new Product({
       brand,
       category,
-      price,
+      price: Number(price),
       playerType,
       material,
       level,
     });
 
     const savedProduct = await newProduct.save();
-    res.status(201).json({ message: "Product added successfully", product: savedProduct });
+    res
+      .status(201)
+      .json({ message: "Product added successfully", product: savedProduct });
   } catch (err) {
+    console.error("❌ Error saving product:", err); // Error log
     res.status(500).json({ message: "Failed to add product" });
   }
 });
