@@ -31,6 +31,7 @@ h1 {
   color: #0f172a; /* slate-900 */
 }
 
+/* Links */
 a {
   font-weight: 500;
   color: #2563eb; /* blue-600 */
@@ -41,7 +42,7 @@ a:hover {
   color: #1e40af; /* blue-800 */
 }
 
-/* Reusable button styling */
+/* Buttons */
 button {
   border-radius: 0.5rem;
   border: 1px solid transparent;

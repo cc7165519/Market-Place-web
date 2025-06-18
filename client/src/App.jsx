@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import Home from "./pages/Home";
 import AddProduct from "./pages/AddProduct";
-import EditProduct from "./components/EditProduct";
+import EditProduct from "./components/EditProduct"; // ✅ Correct path
 
 function App() {
   return (
@@ -42,6 +42,11 @@ function App() {
             </Routes>
           </div>
         </main>
+
+        {/* Footer */}
+        <footer className="bg-gray-100 text-center text-sm py-4 text-gray-600">
+          © {new Date().getFullYear()} ProCricket Store. All rights reserved.
+        </footer>
       </div>
     </Router>
   );

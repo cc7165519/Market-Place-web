@@ -1,76 +1,113 @@
-
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
+const mongoose = require("mongoose");
+const Product = require("./models/product");
 
 const app = express();
-const PORT = 5000;
-const DATA_PATH = path.join(__dirname, "data", "products.json");
+const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-const readProducts = () => JSON.parse(fs.readFileSync(DATA_PATH));
-const writeProducts = (data) => {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
-};
+// MongoDB connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((error) => {
+    console.error("❌ MongoDB connection error:", error);
+    process.exit(1);
+  });
 
+// Root route
 app.get("/", (req, res) => {
-  res.send("API is running!");
+  res.send("🏏 Pro Cricket Store API is running");
 });
 
-// get all products
-app.get("/api/products", (req, res) => {
+// Get all products
+app.get("/api/products", async (req, res) => {
   try {
-    const products = readProducts();
+    const products = await Product.find();
     res.json(products);
-  } catch (error) {
-    res.status(500).json({ message: "Error reading products data" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error while fetching products" });
   }
 });
 
-// get product by id
-app.get("/api/products/:id", (req, res) => {
-  const products = readProducts();
-  const product = products.find((s) => s.id === parseInt(req.params.id));
-  if (product) {
+// Get single product by ID
+app.get("/api/products/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product)
+      return res.status(404).json({ message: "Product not found" });
     res.json(product);
-  } else {
-    res.status(404).json({ message: "product not found" });
+  } catch (err) {
+    res.status(400).json({ message: "Invalid product ID" });
   }
 });
 
-// add a new product
-app.post("/api/product", (req, res) => {
-    const products = readProducts();
-    const newProduct = {...req.body, id: Date.now()};
-    products.push(newProduct);
-    writeStudents(products);
-    res.status(201).json(newProduct);
+// Create a new product
+app.post("/api/products", async (req, res) => {
+  try {
+    const { brand, category, price, playerType, material, level } = req.body;
+
+    // Basic validation
+    if (!brand || !category || price == null)
+      return res.status(400).json({ message: "Brand, category, and price are required" });
+
+    const newProduct = new Product({
+      brand,
+      category,
+      price,
+      playerType,
+      material,
+      level,
+    });
+
+    const savedProduct = await newProduct.save();
+    res.status(201).json({ message: "Product added successfully", product: savedProduct });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to add product" });
+  }
 });
 
-// update an existing product
-app.put("/api/products/:id", (req, res) => {
-    let products = readProducts();
-    const id = parseInt(req.params.id);
-    products = products.map((s) => (s.id === id ? { ...s, ...req.body } : s));
-    writeProducts(products);
-    res.json({ message: "Product updated successfully" });
+// Update an existing product
+app.put("/api/products/:id", async (req, res) => {
+  try {
+    const updated = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
+    if (!updated)
+      return res.status(404).json({ message: "Product not found" });
+
+    res.json({ message: "Product updated successfully", product: updated });
+  } catch (err) {
+    res.status(400).json({ message: "Invalid update request" });
+  }
 });
 
-// delete a product
-app.delete("/api/products/:id", (req, res) => {
-    let products = readProducts();
-    products = products.filter(s => s.id !== parseInt(req.params.id));
-    writeProducts(products);
+// Delete a product
+app.delete("/api/products/:id", async (req, res) => {
+  try {
+    const deleted = await Product.findByIdAndDelete(req.params.id);
+
+    if (!deleted)
+      return res.status(404).json({ message: "Product not found" });
+
     res.json({ message: "Product deleted successfully" });
+  } catch (err) {
+    res.status(400).json({ message: "Invalid product ID" });
+  }
 });
 
+// 404 Handler
 app.use((req, res) => {
-    res.status(404).json({ message: "Route not found" });
+  res.status(404).json({ message: "Route not found" });
 });
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

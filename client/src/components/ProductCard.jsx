@@ -4,12 +4,12 @@ function ProductCard({ product, onDelete }) {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 text-gray-800 space-y-2">
-      <h2 className="text-2xl font-bold text-gray-900">{product.name}</h2>
+    <div className="bg-white shadow-md rounded-xl p-6 text-gray-800 space-y-2 hover:shadow-lg transition-shadow duration-300">
+      <h2 className="text-2xl font-bold text-gray-900">{product.brand}</h2>
 
       <p><span className="font-medium">Brand:</span> {product.brand}</p>
       <p><span className="font-medium">Category:</span> {product.category}</p>
-      
+
       {product.playerType && (
         <p><span className="font-medium">Player Type:</span> {product.playerType}</p>
       )}
@@ -24,13 +24,13 @@ function ProductCard({ product, onDelete }) {
 
       <div className="mt-4 flex gap-3">
         <button
-          onClick={() => navigate(`/edit/${product.id}`)}
+          onClick={() => navigate(`/edit/${product._id}`)}
           className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded"
         >
           Edit
         </button>
         <button
-          onClick={() => onDelete(product.id)}
+          onClick={() => onDelete(product._id)}
           className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
         >
           Delete

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Base styles */
 :root {
   font-family: 'Inter', sans-serif;
   background-color: #f9fafb;
@@ -13,7 +14,64 @@
   text-align: center;
 }
 
-/* Logo styles */
+/* Navbar */
+.navbar {
+  background-color: #111827; /* Tailwind gray-900 */
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #60a5fa; /* Tailwind blue-400 */
+}
+
+/* Product Card */
+.card {
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.5rem;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background-color: #e0f2fe; /* sky-100 */
+  color: #0369a1; /* sky-800 */
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Footer */
+.footer {
+  background-color: #f3f4f6; /* gray-100 */
+  color: #4b5563; /* gray-600 */
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2.5rem;
+}
+
+/* Logo */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -29,7 +87,7 @@
   filter: drop-shadow(0 0 2em #60a5fa88); /* blue-400 */
 }
 
-/* Optional animated logo spin */
+/* Logo spin animation */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -45,24 +103,14 @@
   }
 }
 
-/* Card component */
-.card {
-  padding: 2rem;
-  border-radius: 1rem;
-  background-color: #ffffff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-/* Documentation or link text */
+/* Read more link */
 .read-the-docs {
   color: #047857; /* emerald-700 */
   font-weight: 500;
   font-size: 1rem;
 }
 
-/* Button styling baseline (for custom buttons) */
+/* Button */
 .button {
   background-color: #2563eb; /* blue-600 */
   color: white;
