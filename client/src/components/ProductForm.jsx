@@ -20,28 +20,27 @@ function ProductForm({ initialData }) {
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value.trimStart(), // prevents leading spaces
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
-    if (!form.brand || !form.category || !form.price) {
+    const { brand, category, price } = form;
+    if (!brand || !category || !price) {
       return alert('Brand, category, and price are required.');
     }
 
-    // Convert price to Number to match backend schema
     const preparedForm = {
       ...form,
-      price: Number(form.price),
+      price: Number(price),
     };
 
     const method = initialData ? 'PUT' : 'POST';
     const url = initialData
-      ? `http://localhost:5000/api/products/${initialData._id}`
-      : 'http://localhost:5000/api/products';
+      ? `${import.meta.env.VITE_BACKEND_URL}/api/products/${initialData._id}`
+      : `${import.meta.env.VITE_BACKEND_URL}/api/products`;
 
     try {
       const response = await fetch(url, {
@@ -73,62 +72,18 @@ function ProductForm({ initialData }) {
         {initialData ? 'Edit Product' : 'Add New Product'}
       </h2>
 
-      <input
-        className="w-full p-2 border mb-3 text-black"
-        type="text"
-        name="brand"
-        placeholder="Brand"
-        value={form.brand}
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        className="w-full p-2 border mb-3 text-black"
-        type="text"
-        name="category"
-        placeholder="Category"
-        value={form.category}
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        className="w-full p-2 border mb-3 text-black"
-        type="number"
-        name="price"
-        placeholder="Price"
-        value={form.price}
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        className="w-full p-2 border mb-3 text-black"
-        type="text"
-        name="playerType"
-        placeholder="Player Type (e.g. Beginner, Pro)"
-        value={form.playerType}
-        onChange={handleChange}
-      />
-
-      <input
-        className="w-full p-2 border mb-3 text-black"
-        type="text"
-        name="material"
-        placeholder="Material (e.g. Leather, Plastic)"
-        value={form.material}
-        onChange={handleChange}
-      />
-
-      <input
-        className="w-full p-2 border mb-3 text-black"
-        type="text"
-        name="level"
-        placeholder="Skill Level (e.g. Amateur, Advanced)"
-        value={form.level}
-        onChange={handleChange}
-      />
+      {['brand', 'category', 'price', 'playerType', 'material', 'level'].map((field) => (
+        <input
+          key={field}
+          className="w-full p-2 border mb-3 text-black"
+          type={field === 'price' ? 'number' : 'text'}
+          name={field}
+          placeholder={field[0].toUpperCase() + field.slice(1)}
+          value={form[field]}
+          onChange={handleChange}
+          required={['brand', 'category', 'price'].includes(field)}
+        />
+      ))}
 
       <button
         type="submit"

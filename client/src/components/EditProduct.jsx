@@ -9,9 +9,12 @@ function EditProduct() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ✅ Use environment variable or fallback to localhost
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(`${BASE_URL}/api/products/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch product data");
         return res.json();
@@ -25,7 +28,7 @@ function EditProduct() {
         setError("Failed to load product. Please try again.");
       })
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, BASE_URL]);
 
   if (loading) return <p className="text-gray-600 text-center">Loading product...</p>;
   if (error) return <p className="text-red-600 text-center">{error}</p>;

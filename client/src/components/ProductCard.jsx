@@ -4,23 +4,35 @@ function ProductCard({ product, onDelete }) {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 text-gray-800 space-y-2 hover:shadow-lg transition-shadow duration-300">
-      <h2 className="text-2xl font-bold text-gray-900">{product.brand}</h2>
+    <div className="bg-white shadow-md rounded-xl p-6 text-gray-800 hover:shadow-lg transition-shadow duration-300 space-y-2">
+      <h2 className="text-2xl font-bold text-gray-900">{product.brand || 'Unknown Brand'}</h2>
 
-      <p><span className="font-medium">Brand:</span> {product.brand}</p>
-      <p><span className="font-medium">Category:</span> {product.category}</p>
+      <p>
+        <span className="font-medium">Brand:</span> {product.brand}
+      </p>
+      <p>
+        <span className="font-medium">Category:</span> {product.category}
+      </p>
 
       {product.playerType && (
-        <p><span className="font-medium">Player Type:</span> {product.playerType}</p>
+        <p>
+          <span className="font-medium">Player Type:</span> {product.playerType}
+        </p>
       )}
       {product.material && (
-        <p><span className="font-medium">Material:</span> {product.material}</p>
+        <p>
+          <span className="font-medium">Material:</span> {product.material}
+        </p>
       )}
       {product.level && (
-        <p><span className="font-medium">Skill Level:</span> {product.level}</p>
+        <p>
+          <span className="font-medium">Skill Level:</span> {product.level}
+        </p>
       )}
 
-      <p><span className="font-medium">Price:</span> ₹{product.price}</p>
+      <p>
+        <span className="font-medium">Price:</span> ₹{product.price}
+      </p>
 
       <div className="mt-4 flex gap-3">
         <button
