@@ -9,7 +9,6 @@ function EditProduct() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ Use environment variable or fallback to localhost
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   useEffect(() => {
@@ -30,6 +29,28 @@ function EditProduct() {
       .finally(() => setLoading(false));
   }, [id, BASE_URL]);
 
+  // ✅ Add this handler for updating the product
+  const handleUpdate = async (updatedProduct) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/products/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedProduct),
+      });
+
+      if (response.ok) {
+        navigate('/');
+      } else {
+        alert('Failed to update product');
+      }
+    } catch (error) {
+      console.error('Error updating product:', error);
+      alert('Something went wrong');
+    }
+  };
+
   if (loading) return <p className="text-gray-600 text-center">Loading product...</p>;
   if (error) return <p className="text-red-600 text-center">{error}</p>;
 
@@ -38,7 +59,7 @@ function EditProduct() {
       {product ? (
         <>
           <h2 className="text-2xl font-semibold mb-4 text-left">Edit Product</h2>
-          <ProductForm initialData={product} />
+          <ProductForm initialData={product} onSubmit={handleUpdate} />
         </>
       ) : (
         <div className="text-center">
